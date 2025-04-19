@@ -17,7 +17,7 @@ const NotFound = () => {
       <div className="text-center max-w-md p-6">
         <div className="mb-6 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
           <h1 className="text-8xl font-bold text-hotel-primary mb-4">404</h1>
-          <p className="text-xl text-gray-700 mb-6">Cette page n'existe pas</p>
+          <p className="text-xl text-gray-700 mb-6">Cette page n’existe pas</p>
           <p className="text-gray-500 mb-8">
             La page que vous recherchez semble introuvable. Retournez à la page d'accueil pour continuer votre navigation.
           </p>

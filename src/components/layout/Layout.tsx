@@ -1,4 +1,4 @@
-import { Sidebar } from "./Sidebar";
+import Sidebar from "./Sidebar"
 import { Header } from "./Header";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
