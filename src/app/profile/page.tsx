@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { profileSchema } from "@/lib/validations/profile"
@@ -24,6 +24,7 @@ type FormData = {
 }
 
 export default function ProfilePage() {
+  const [isLoading, setIsLoading] = useState(true)
   const { data: session, status } = useSession()
   const router = useRouter()
   const { name, setUser } = useUserStore()
@@ -42,6 +43,8 @@ export default function ProfilePage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth/signin")
+    } else if (status === "authenticated") {
+      setIsLoading(false)
     }
   }, [status, router])
 
@@ -86,12 +89,16 @@ export default function ProfilePage() {
     }
   }, [session, form])
 
-  if (status === "loading") {
+  if (status === "loading" || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     )
+  }
+
+  if (!session) {
+    return null
   }
 
   return (
