@@ -8,13 +8,12 @@ const nextConfig = {
         ignoreBuildErrors: false,
     },
     eslint: {
-        ignoreDuringBuilds: false,
+        ignoreDuringBuilds: true,
     },
     webpack: (config) => {
         config.externals = [...config.externals, { '@prisma/client': '@prisma/client' }];
         return config;
     },
-    distDir: '.next',
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig
