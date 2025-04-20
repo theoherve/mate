@@ -14,7 +14,6 @@ const nextConfig = {
         config.externals = [...config.externals, { '@prisma/client': '@prisma/client' }];
         return config;
     },
-    distDir: '.next',
 }
 
 module.exports = nextConfig
