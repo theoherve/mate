@@ -1,4 +1,4 @@
-import { Layout } from "@/components/layout/Layout";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { OccupancyChart } from "@/components/dashboard/OccupancyChart";
 import { PricingChart } from "@/components/dashboard/PricingChart";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
-    <Layout>
+    <PageLayout>
       <div className="space-y-8 animate-fade-in">
         <div className="flex items-center justify-between">
           <div>
@@ -80,7 +80,7 @@ const Index = () => {
           <NewsInsights />
         </div>
       </div>
-    </Layout>
+    </PageLayout>
   );
 };
 
