@@ -32,16 +32,16 @@ type NavigationItem = {
 
 const navigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Occupation", href: "/Occupation", icon: Hotel },
-  { name: "Pricing", href: "/Pricing", icon: CreditCard },
-  { name: "competitors", href: "/competitors", icon: TrendingUp },
-  { name: "Analytics", href: "/Analytics", icon: BarChart3 },
-  { name: "Forecast", href: "/Forecast", icon: Gauge },
-  { name: "Calendar", href: "/Calendar", icon: Calendar },
-  { name: "Local Events", href: "/events", icon: Map },
-  { name: "Team", href: "/Team", icon: Users },
-  { name: "Profile", href: "/profile", icon: User },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Occupation", href: "/dashboard/occupation", icon: Hotel },
+  { name: "Pricing", href: "/dashboard/pricing", icon: CreditCard },
+  { name: "competitors", href: "/dashboard/competitors", icon: TrendingUp },
+  { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
+  { name: "Forecast", href: "/dashboard/forecast", icon: Gauge },
+  { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
+  { name: "Local Events", href: "/dashboard/events", icon: Map },
+  { name: "Team", href: "/dashboard/team", icon: Users },
+  { name: "Profile", href: "/dashboard/profile", icon: User },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export default function Sidebar() {
