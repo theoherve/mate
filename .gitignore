@@ -38,3 +38,6 @@ dist-ssr
 
 # Next.js
 .next
+
+# Prisma generated client
+generated
