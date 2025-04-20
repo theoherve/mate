@@ -1,31 +1,29 @@
 import type { Metadata } from "next"
+import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { AuthProvider } from "@/components/auth-provider"
+import { Providers } from "@/components/providers/Providers"
+import { PageLayout } from "@/components/layout/PageLayout"
+
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-    title: "Mate",
-    description: "Your application description",
+    title: "Hotel Horizon",
+    description: "Hotel management system",
 }
 
 export default function RootLayout({
     children,
-}: {
-    children: React.ReactNode
-}) {
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body>
-                <AuthProvider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+            <body className={inter.className}>
+                <Providers>
+                    <PageLayout>
                         {children}
-                    </ThemeProvider>
-                </AuthProvider>
+                    </PageLayout>
+                </Providers>
             </body>
         </html>
     )

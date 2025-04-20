@@ -1,64 +1,147 @@
 "use client";
 
-import Link from "next/link";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { useMobileMenu } from "@/contexts/MobileMenuContext";
+
 import { 
   LayoutDashboard, 
   User, 
   Settings, 
-  LogOut 
+  Hotel,
+  CreditCard,
+  TrendingUp,
+  BarChart3,
+  Gauge,
+  Calendar,
+  Map,
+  Users,
+  ArrowRight,
+  ArrowLeft
 } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
-const navigation = [
+type NavigationItem = {
+  name: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+const navigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Occupation", href: "/Occupation", icon: Hotel },
+  { name: "Pricing", href: "/Pricing", icon: CreditCard },
+  { name: "competitors", href: "/competitors", icon: TrendingUp },
+  { name: "Analytics", href: "/Analytics", icon: BarChart3 },
+  { name: "Forecast", href: "/Forecast", icon: Gauge },
+  { name: "Calendar", href: "/Calendar", icon: Calendar },
+  { name: "Local Events", href: "/events", icon: Map },
+  { name: "Team", href: "/Team", icon: Users },
   { name: "Profile", href: "/profile", icon: User },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 export default function Sidebar() {
+  const isMobile = useIsMobile();
+  const { isOpen, setIsOpen, isSidebarCollapsed, toggleSidebar } = useMobileMenu();
   const pathname = usePathname();
 
-  return (
-    <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200">
-      <div className="flex flex-col h-full">
-        <div className="flex items-center justify-center h-16 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-800">Mate</h1>
-        </div>
-        
-        <nav className="flex-1 px-4 py-6">
+  const sidebarContent = (
+    <>
+      <div className="p-4 flex items-center justify-between">
+        {!isSidebarCollapsed && (
+          <h1 className="text-xl font-bold text-hotel-primary flex items-center">
+            <Hotel className="mr-2" /> 
+            <span>Hotel Horizon</span>
+          </h1>
+        )}
+        {isSidebarCollapsed && (
+          <Hotel className="mx-auto text-hotel-primary" size={28} />
+        )}
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={isMobile ? () => setIsOpen(false) : toggleSidebar}
+          className={cn("text-gray-500 hover:text-gray-700", isSidebarCollapsed && "mx-auto")}
+        >
+          {isMobile ? <ArrowLeft /> : (isSidebarCollapsed ? <ArrowRight /> : <ArrowLeft />)}
+        </Button>
+      </div>
+
+      <div className="flex-1 py-6">
+        <nav className="flex-1 px-2 py-4">
           <ul className="space-y-2">
-            {navigation.map((item) => {
+            {navigation.map((item: NavigationItem) => {
               const isActive = pathname === item.href;
               return (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+                    className={cn(
+                      "flex items-center px-4 py-2 rounded-lg transition-colors",
                       isActive
-                        ? "bg-blue-50 text-blue-600"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
+                        ? "bg-hotel-primary/10 text-hotel-primary"
+                        : "text-gray-600 hover:bg-gray-50",
+                      isSidebarCollapsed && "justify-center"
+                    )}
+                    onClick={() => isMobile && setIsOpen(false)}
                   >
-                    <item.icon className="w-5 h-5 mr-3" />
-                    {item.name}
+                    <item.icon className={cn(
+                      "w-5 h-5",
+                      !isSidebarCollapsed && "mr-3"
+                    )} />
+                    {!isSidebarCollapsed && item.name}
                   </Link>
                 </li>
               );
             })}
           </ul>
         </nav>
+      </div>
 
-        <div className="p-4 border-t border-gray-200">
-          <button
-            onClick={() => signOut()}
-            className="flex items-center w-full px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <LogOut className="w-5 h-5 mr-3" />
-            Logout
-          </button>
+      <div className="p-4 border-t border-gray-200">
+        <div className={cn(
+          "flex items-center",
+          isSidebarCollapsed ? "justify-center" : "space-x-3"
+        )}>
+          <div className="bg-gradient-to-r from-hotel-primary to-hotel-secondary w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">
+            HH
+          </div>
+          {!isSidebarCollapsed && (
+            <div className="flex-1">
+              <p className="text-sm font-medium">Hotel Horizon</p>
+              <p className="text-xs text-gray-500">Premium Plan</p>
+            </div>
+          )}
         </div>
       </div>
+    </>
+  );
+
+  if (isMobile) {
+    if (!isOpen) return null;
+    return (
+      <div className="fixed inset-0 z-50">
+        <div 
+          className="absolute inset-0 bg-black/50" 
+          onClick={() => setIsOpen(false)}
+        />
+        <div className="absolute left-0 top-0 h-full w-64 bg-hotel-background border-r border-gray-200">
+          {sidebarContent}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn(
+      "h-screen bg-hotel-background border-r border-gray-200 transition-all duration-300 flex flex-col fixed",
+      isSidebarCollapsed ? "w-20" : "w-64"
+    )}>
+      {sidebarContent}
     </div>
   );
 }
