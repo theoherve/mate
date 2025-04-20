@@ -1,147 +1,116 @@
-import { Link } from "react-router-dom";
-import { 
-  BarChart3, 
-  Calendar, 
-  CreditCard, 
-  Gauge, 
-  Hotel, 
-  LayoutDashboard, 
-  Map, 
-  Settings, 
-  TrendingUp, 
-  Users 
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+"use client";
+
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { useMobileMenu } from "@/contexts/MobileMenuContext";
 
-type SidebarItem = {
-  title: string;
-  icon: React.ElementType;
-  path: string;
-  active?: boolean;
-};
+import { 
+  LayoutDashboard, 
+  User, 
+  Settings, 
+  Hotel,
+  CreditCard,
+  TrendingUp,
+  BarChart3,
+  Gauge,
+  Calendar,
+  Map,
+  Users,
+  ArrowRight,
+  ArrowLeft
+} from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
-const sidebarItems: SidebarItem[] = [
-  {
-    title: "Dashboard",
-    icon: LayoutDashboard,
-    path: "/",
-  },
-  {
-    title: "Occupation",
-    icon: Hotel,
-    path: "/occupation",
-  },
-  {
-    title: "Pricing",
-    icon: CreditCard,
-    path: "/pricing",
-  },
-  {
-    title: "Competitors",
-    icon: TrendingUp,
-    path: "/competitors",
-  },
-  {
-    title: "Analytics",
-    icon: BarChart3,
-    path: "/analytics",
-  },
-  {
-    title: "Forecast",
-    icon: Gauge,
-    path: "/forecast",
-  },
-  {
-    title: "Calendar",
-    icon: Calendar,
-    path: "/calendar",
-  },
-  {
-    title: "Local Events",
-    icon: Map,
-    path: "/events",
-  },
-  {
-    title: "Team",
-    icon: Users,
-    path: "/team",
-  },
-  {
-    title: "Settings",
-    icon: Settings,
-    path: "/settings",
-  },
+type NavigationItem = {
+  name: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+const navigation: NavigationItem[] = [
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Occupation", href: "/Occupation", icon: Hotel },
+  { name: "Pricing", href: "/Pricing", icon: CreditCard },
+  { name: "competitors", href: "/competitors", icon: TrendingUp },
+  { name: "Analytics", href: "/Analytics", icon: BarChart3 },
+  { name: "Forecast", href: "/Forecast", icon: Gauge },
+  { name: "Calendar", href: "/Calendar", icon: Calendar },
+  { name: "Local Events", href: "/events", icon: Map },
+  { name: "Team", href: "/Team", icon: Users },
+  { name: "Profile", href: "/profile", icon: User },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export default function Sidebar() {
   const isMobile = useIsMobile();
-  const [collapsed, setCollapsed] = useState(false);
+  const { isOpen, setIsOpen, isSidebarCollapsed, toggleSidebar } = useMobileMenu();
+  const pathname = usePathname();
 
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
-
-  // Sur mobile, on affiche pas la sidebar mais un menu burger
-  if (isMobile) return null;
-
-  return (
-    <div className={cn(
-      "h-screen bg-hotel-background border-r border-gray-200 transition-all duration-300 flex flex-col fixed",
-      collapsed ? "w-20" : "w-64"
-    )}>
+  const sidebarContent = (
+    <>
       <div className="p-4 flex items-center justify-between">
-        {!collapsed && (
+        {!isSidebarCollapsed && (
           <h1 className="text-xl font-bold text-hotel-primary flex items-center">
             <Hotel className="mr-2" /> 
             <span>Hotel Horizon</span>
           </h1>
         )}
-        {collapsed && (
+        {isSidebarCollapsed && (
           <Hotel className="mx-auto text-hotel-primary" size={28} />
         )}
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={toggleSidebar}
-          className={cn("text-gray-500 hover:text-gray-700", collapsed && "mx-auto")}
+          onClick={isMobile ? () => setIsOpen(false) : toggleSidebar}
+          className={cn("text-gray-500 hover:text-gray-700", isSidebarCollapsed && "mx-auto")}
         >
-          {collapsed ? "→" : "←"}
+          {isMobile ? <ArrowLeft /> : (isSidebarCollapsed ? <ArrowRight /> : <ArrowLeft />)}
         </Button>
       </div>
 
       <div className="flex-1 py-6">
-        <nav className="space-y-1 px-2">
-          {sidebarItems.map((item) => (
-            <Link
-              key={item.title}
-              to={item.path}
-              className={cn(
-                "flex items-center py-3 px-3 rounded-md transition-colors",
-                item.path === window.location.pathname
-                  ? "bg-hotel-primary/10 text-hotel-primary"
-                  : "text-gray-700 hover:bg-hotel-primary/5 hover:text-hotel-primary",
-                collapsed && "justify-center px-2"
-              )}
-            >
-              <item.icon size={20} className={collapsed ? "" : "mr-3"} />
-              {!collapsed && <span>{item.title}</span>}
-            </Link>
-          ))}
+        <nav className="flex-1 px-2 py-4">
+          <ul className="space-y-2">
+            {navigation.map((item: NavigationItem) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "flex items-center px-4 py-2 rounded-lg transition-colors",
+                      isActive
+                        ? "bg-hotel-primary/10 text-hotel-primary"
+                        : "text-gray-600 hover:bg-gray-50",
+                      isSidebarCollapsed && "justify-center"
+                    )}
+                    onClick={() => isMobile && setIsOpen(false)}
+                  >
+                    <item.icon className={cn(
+                      "w-5 h-5",
+                      !isSidebarCollapsed && "mr-3"
+                    )} />
+                    {!isSidebarCollapsed && item.name}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
       </div>
 
       <div className="p-4 border-t border-gray-200">
         <div className={cn(
           "flex items-center",
-          collapsed ? "justify-center" : "space-x-3"
+          isSidebarCollapsed ? "justify-center" : "space-x-3"
         )}>
           <div className="bg-gradient-to-r from-hotel-primary to-hotel-secondary w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">
             HH
           </div>
-          {!collapsed && (
+          {!isSidebarCollapsed && (
             <div className="flex-1">
               <p className="text-sm font-medium">Hotel Horizon</p>
               <p className="text-xs text-gray-500">Premium Plan</p>
@@ -149,6 +118,30 @@ export function Sidebar() {
           )}
         </div>
       </div>
+    </>
+  );
+
+  if (isMobile) {
+    if (!isOpen) return null;
+    return (
+      <div className="fixed inset-0 z-50">
+        <div 
+          className="absolute inset-0 bg-black/50" 
+          onClick={() => setIsOpen(false)}
+        />
+        <div className="absolute left-0 top-0 h-full w-64 bg-hotel-background border-r border-gray-200">
+          {sidebarContent}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn(
+      "h-screen bg-hotel-background border-r border-gray-200 transition-all duration-300 flex flex-col fixed",
+      isSidebarCollapsed ? "w-20" : "w-64"
+    )}>
+      {sidebarContent}
     </div>
   );
 }
