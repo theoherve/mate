@@ -14,6 +14,7 @@ import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 import { updateProfile, updatePassword } from "@/services/profile"
 import { useUserStore } from "@/store/user-store"
+import { Suspense } from "react"
 
 type FormData = {
   name: string
@@ -23,7 +24,7 @@ type FormData = {
   confirmPassword: string
 }
 
-export default function ProfilePage() {
+function ProfileForm() {
   const [isLoading, setIsLoading] = useState(true)
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -212,5 +213,13 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProfileForm />
+    </Suspense>
   )
 } 
