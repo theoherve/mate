@@ -37,4 +37,4 @@ export function useMobileMenu() {
     throw new Error("useMobileMenu must be used within a MobileMenuProvider");
   }
   return context;
-} 
+}
